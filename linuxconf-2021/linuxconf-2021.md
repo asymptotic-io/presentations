@@ -3,8 +3,10 @@ title:
 - What's next for Bluetooth in PulseAudio?
 author:
 - Sanchayan Maity
+institute:
+- asymptotic.io
 theme:
-- Marburg
+- Berlin
 ---
 
 # What is PulseAudio?
