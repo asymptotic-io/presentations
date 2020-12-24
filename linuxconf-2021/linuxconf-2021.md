@@ -7,6 +7,8 @@ institute:
 - asymptotic.io
 theme:
 - Berlin
+classoption:
+- aspectratio=169
 ---
 
 # What is PulseAudio?
@@ -42,7 +44,7 @@ theme:
 
 # So which is better?
 
-![](../images/standards.png)
+![](../images/standards.png){width=80%}
 
 # Current State
 
