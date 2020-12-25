@@ -16,10 +16,12 @@ card device drivers, configuring ALSA can be tricky. Has limitations for
 playing audio from multiple sources concurrently and lacks native Bluetooth
 support. For example, Raspberry Pi OS recently switched to PulseAudio.
 
-PulseAudio works on top of ALSA and primarily acts as a background process,
-taking input from one or more sources and then redirecting these sources to one
-or more sinks. So PA does the job of mixing. Without this only one program
-would have been able to playback sound at a time.
+PulseAudio basically mediates access to audio resources on your system so
+mixing, volumes, routing policy etc. It works on top of ALSA and primarily acts
+as a background process, taking input from one or more sources and then
+redirecting these sources to one or more sinks thus carrying out the job of
+software mixing. Without this only one program would have been able to playback
+sound at a time.
 
 Some of the helpful features PA provides are:
 
@@ -40,8 +42,9 @@ of the configuration from the comfort of a GUI.
 # Bluetooth Profiles
 
 The bluetooth wireless technology standard has become pretty ubiquitous these
-days. Devices have already started to come out with the latest Bluetooth 5.0
-specification. Wanna buy a new cell phone? Make sure it has Bluetooth 5.0!
+days. The latest Bluetooth specification is 5.2. For audio, between 4.2 and 5.0
+things don't change a lot. However, Bluetooth 5.2 introduces the successor to
+SBC viz. LC3.
 
 When talking about Bluetooth stack, one of the first thing that concerns us are
 the various Bluetooth profiles. So what exactly are profiles? Profiles specify
@@ -67,15 +70,18 @@ up or adjust the volume.
 
 HFP concerns itself with allowing hands free kits to communicate with mobile
 phones like in car. In comparison to HSP, it adds extra features for use with a
-mobile phone like voice dialing, call waiting or redialing the last number.
+mobile phone like voice dialing, call waiting or redialing the last number. It
+also adds mSBC which allows for better audio over HSP.
 
 For this talk, henceforth, our focus will primarily be on the A2DP profile.
 
 # Bluetooth Codecs
 
 Now let's move on to codecs. So what is a codec? A codec is nothing but
-hardware or software which encodes or decodes digital data. Now when it comes
-to A2DP, it specifies one mandated codec and some optional codecs.
+hardware or software which encodes or decodes digital data. The purpose of the
+codec in our case is compression, so we can efficiently utilise the bandwidth
+available. Now when it comes to A2DP, it specifies one mandated codec and some
+optional codecs.
 
 Low-complexity sub-band codec or more commonly known as just SBC, is the
 mandated codec. It is what every Bluetooth device which supports A2DP must
@@ -84,7 +90,11 @@ implement at a minimum.
 There are other codecs available. Qualcomm has it's Audio Processing Technology
 aptX codec. Sony has LDAC. There is also Advanced Audio Coding (AAC), which has
 been standardised by ISO and IEC as part of MPEG-2 and MPEG-4 specifications.
-All the last three require licensing and license fees.
+
+Licensing as a user or consumer is unclear. libldac which is the reference
+encoder implementation and included in Android has Apache license. aptX patents
+have expired it would seem. For AAC it is not required for a user to stream or
+distribute content.
 
 All devices support SBC but LDAC is generally available with Sony and some
 other DACs while aptX is generally only available with devices which use
@@ -129,13 +139,28 @@ encoder implementation is the one included with Android. As per the tests done
 by folks at soundguys, it can provide slightly better results compared to
 aptX-HD.
 
+# Codec Latencies
+
+Another characteristic that distinguishes these codecs is latency. The time it
+takes for a signal processor to decode the encoded audio is often sufficient to
+delay the audio to a point where one starts observing lip sync problems while
+watching video. Codecs like aptX which are less math and memory intensive have
+less latency. More math and memory intensive codecs like AAC can have greater
+latency but can be more efficient in conserving data and produce better sound
+quality for a given rate.
+
 # Current State of PulseAudio
 
 Now, let's talk about the current state of things in PulseAudio. Currently
 upstream only supports SBC codec. HSP and HFP are supported however the sound
 quality has been a pain point for many users. There has been an out of
-community effort providing support for other codecs, but, the way it implements
-things does not make it suitable for merging upstream.
+community effort providing support for other codecs, but, there were challenges
+with getting the work merged upstream.
+
+Recently messaging API support got merged in PulseAudio. Previously, the only
+way for users to influence choices at the level one wanted was card profiles.
+However, card profiles do not provide a good user experience. Messaging API was
+specifically created to address this.
 
 # Challenges
 
@@ -199,10 +224,17 @@ this recording has been posted and is currently under review.
 
 # Conclusion
 
-So what's next? First of all we need to implement whatever feedback we receive
-on our merge request. While we have done testing on our end, users and other
-maintainers will test further and probably report bugs or missing pieces. We
-will be dependent on GStreamer 1.20 landing in various distributions which will
-include support for LDAC, aptX via libopenaptX library and AAC. Finally, the
-PulseAudio release which includes all this being packaged for various
-distributions.
+So what's next?
+
+LDAC provides a feature called Adaptive Bit Rate (ABR). This allows adjusting
+the bit rate based on transmission conditions.
+
+Providing mSBC support for HFP. The default CVSD codec for HSP does not provide
+good enough audio quality. mSBC which is basically a variant of SBC provides
+better quality in comparison. Wide band 16 KHz over 8 KHz of HSP.
+
+Low Complexity Communication codec LC3 is a new audio codec for BLE audio
+protocol introduced with Bluetooth 5.2. It is the successor to SBC.
+
+Providing additional improvements to the user experience like being able to
+easily specify the preference order for codecs.

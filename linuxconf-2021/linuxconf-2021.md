@@ -6,7 +6,7 @@ author:
 institute:
 - asymptotic.io
 theme:
-- Berlin
+- default
 classoption:
 - aspectratio=169
 ---
@@ -15,6 +15,7 @@ classoption:
 
 - Initial release on 17 July 2004
 - First appeared for users in Fedora Linux with version 8
+- Mediates access to audio resources on your system
 - Features?
 	* Audio mixing
 	* Per application volume controls
@@ -31,26 +32,31 @@ classoption:
 - Some of the widely used bluetooth profiles
 	* Advanced Audio Distribution Profile (A2DP)
 	* Audio/Video Remote Control Profile (AVRCP)
-	* Hands-Free Profile (HFP)
 	* Headset Profile (HSP)
+	* Hands-Free Profile (HFP)
 
 # Bluetooth Codecs
 
 - Available codecs?
-	- Low-complexity subband codec (SBC)
-	- Audio Processing Technology (aptX, aptX-HD)
-	- Advanced Audio Coding (AAC)
-	- LDAC
+	* Low-complexity subband codec (SBC)
+	* Audio Processing Technology (aptX, aptX-HD)
+	* Advanced Audio Coding (AAC)
+	* LDAC
 
 # So which is better?
 
 ![](../images/standards.png){width=80%}
+
+# Codec Latencies!
+
+![](Bluetooth-Codec-Latency-by-Smartphone.jpg){width=80%}
 
 # Current State
 
 - Upstream only supports SBC :(
 - HSP/HFP support
 - Out of tree community effort with [pulseaudio-modules-bt](https://github.com/EHfive/pulseaudio-modules-bt)
+- Messaging API
 
 # Challenges
 
@@ -61,8 +67,8 @@ classoption:
 
 # GStreamer
 
-* What is GStreamer?
-* Why?
+- What is GStreamer?
+- Why?
 
 # Example Pipeline
 
@@ -73,7 +79,7 @@ ldacenc eqmid=2 ! a2dpsink
 transport=/org/bluez/hci0/dev_4C_BC_98_80_01_9B/sep10/fd0
 ```
 
-![](ldac.png "")
+![](ldac.svg "")
 
 # Progress so far
 
@@ -86,4 +92,9 @@ transport=/org/bluez/hci0/dev_4C_BC_98_80_01_9B/sep10/fd0
 
 # Questions?
 
-#### Thank You!
+- So what's next?
+	* Support Adaptive Bit Rate (ABR) in LDAC
+	* mSBC support for HFP profile
+	* LC3 codec
+	* Allowing users to specify the preference order for codecs
+	* Support Opus as a vendor codec for PulseAudio <-> PulseAudio
