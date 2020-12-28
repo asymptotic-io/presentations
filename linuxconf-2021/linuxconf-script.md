@@ -5,16 +5,17 @@ open source consulting firm based out of Toronto and Bangalore. Our main focus
 is on low level systems software with our primary work revolving around
 GStreamer and PulseAudio or audio in general. Today I will talk about some of
 the work I have been doing over the last 4 months as part of my work @
-asymptotic to improve the state of bluetooth support in PulseAudio.
+asymptotic to improve the state of bluetooth support in PulseAudio. We will
+also talk about some of the related terminology around Bluetooth.
 
 # What is PulseAudio
 
 PulseAudio had it's first release in 2004 appearing for users in Fedora Linux
-with version 8. While Advanced Linux Sound Architecture (ALSA) exists, which is
-a software framework and part of the Linux kernel providing an API for sound
-card device drivers, configuring ALSA can be tricky. Has limitations for
-playing audio from multiple sources concurrently and lacks native Bluetooth
-support. For example, Raspberry Pi OS recently switched to PulseAudio.
+with version 8. While Advanced Linux Sound Architecture or more commonly known
+as ALSA exists, which is a software framework and also part of the Linux kernel
+providing an API for sound card device drivers, configuring ALSA can be tricky.
+It has limitations for playing audio from multiple sources concurrently and
+lacks native Bluetooth support.
 
 PulseAudio basically mediates access to audio resources on your system so
 mixing, volumes, routing policy etc. It works on top of ALSA and primarily acts
@@ -25,16 +26,14 @@ sound at a time.
 
 Some of the helpful features PA provides are:
 
-	- Per application volume controls
-	- A plugin based architecture allowing support for loadable modules
-	- Support for multiple sources and sinks
-	- Ability to discover other computers using PA on local network and
-	play sound through their speakers directly
-	- Ability to combine multiple sound cards and synchronize multiple
-	playback streams
-	- Bluetooth support. Also provides ability to playback sound from
-	computer's speakers by acting as audio for the remote bluetooth
-	device.
+	* Audio mixing
+	* Per application volume controls
+	* Multiple sources and sinks
+	* Combine multiple sound cards and synchronize multiple playback
+	streams
+	* Bluetooth support
+	* Command line interface with scripting capabilities
+	* Sound daemon with reconfiguration capabilities
 
 There is also a frontend interface like pavucontrol allowing users to do some
 of the configuration from the comfort of a GUI.
@@ -43,8 +42,8 @@ of the configuration from the comfort of a GUI.
 
 The bluetooth wireless technology standard has become pretty ubiquitous these
 days. The latest Bluetooth specification is 5.2. For audio, between 4.2 and 5.0
-things don't change a lot. However, Bluetooth 5.2 introduces the successor to
-SBC viz. LC3.
+things didn't change a lot. However, Bluetooth 5.2 introduces the successor to
+SBC called Low Complexity Communications Codec viz. LC3.
 
 When talking about Bluetooth stack, one of the first thing that concerns us are
 the various Bluetooth profiles. So what exactly are profiles? Profiles specify
@@ -71,7 +70,7 @@ up or adjust the volume.
 HFP concerns itself with allowing hands free kits to communicate with mobile
 phones like in car. In comparison to HSP, it adds extra features for use with a
 mobile phone like voice dialing, call waiting or redialing the last number. It
-also adds mSBC which allows for better audio over HSP.
+also adds the mSBC codec which allows for better audio over HSP.
 
 For this talk, henceforth, our focus will primarily be on the A2DP profile.
 
@@ -142,8 +141,8 @@ aptX-HD.
 # Codec Latencies
 
 Another characteristic that distinguishes these codecs is latency. The time it
-takes for a signal processor to decode the encoded audio is often sufficient to
-delay the audio to a point where one starts observing lip sync problems while
+takes for a signal processor to encode the audio is often sufficient to delay
+the audio to a point where one starts observing lip sync problems while
 watching video. Codecs like aptX which are less math and memory intensive have
 less latency. More math and memory intensive codecs like AAC can have greater
 latency but can be more efficient in conserving data and produce better sound

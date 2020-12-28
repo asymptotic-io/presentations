@@ -24,7 +24,7 @@ classoption:
 	streams
 	* Bluetooth support
 	* Command line interface with scripting capabilities
-	* Sound  daemon with reconfiguration capabilities
+	* Sound daemon with reconfiguration capabilities
 
 # Bluetooth Profiles
 
