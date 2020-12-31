@@ -45,17 +45,17 @@ classoption:
 
 # So which is better?
 
-![](../images/standards.png){width=80%}
+![*_XKCD - Standards_*](../images/standards.png){width=80%}
 
 # Codec Latencies!
 
-![](Bluetooth-Codec-Latency-by-Smartphone.jpg){width=80%}
+![*_Soundguys - Android Bluetooth Latency_*](Bluetooth-Codec-Latency-by-Smartphone.jpg){width=70%}
 
 # Current State
 
 - Upstream only supports SBC :(
-- HSP/HFP support
-- Out of tree community effort with [pulseaudio-modules-bt](https://github.com/EHfive/pulseaudio-modules-bt)
+- HSP/HFP support 
+- Community efforts: out-of-tree pulseaudio-modules-bt, another implementation submitted upstream
 - Messaging API
 
 # Challenges

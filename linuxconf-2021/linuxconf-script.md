@@ -2,20 +2,16 @@
 
 Hello everyone. I am Sanchayan. I work at asymptotic.io. We are primarily an
 open source consulting firm based out of Toronto and Bangalore. Our main focus
-is on low level systems software with our primary work revolving around
-GStreamer and PulseAudio or audio in general. Today I will talk about some of
-the work I have been doing over the last 4 months as part of my work @
-asymptotic to improve the state of bluetooth support in PulseAudio. We will
-also talk about some of the related terminology around Bluetooth.
+is on low level systems software with a lot of our work revolving being around
+GStreamer and PulseAudio. Today I will talk about some of the work I have been
+doing over the last 4 months as part of my work @ asymptotic to improve the
+state of bluetooth support in PulseAudio. We will also talk some of the related
+terminologies around Bluetooth before that.
 
 # What is PulseAudio
 
 PulseAudio had it's first release in 2004 appearing for users in Fedora Linux
-with version 8. While Advanced Linux Sound Architecture or more commonly known
-as ALSA exists, which is a software framework and also part of the Linux kernel
-providing an API for sound card device drivers, configuring ALSA can be tricky.
-It has limitations for playing audio from multiple sources concurrently and
-lacks native Bluetooth support.
+with version 8. 
 
 PulseAudio basically mediates access to audio resources on your system so
 mixing, volumes, routing policy etc. It works on top of ALSA and primarily acts
@@ -35,8 +31,12 @@ Some of the helpful features PA provides are:
 	* Command line interface with scripting capabilities
 	* Sound daemon with reconfiguration capabilities
 
-There is also a frontend interface like pavucontrol allowing users to do some
-of the configuration from the comfort of a GUI.
+While Advanced Linux Sound Architecture or more commonly known as ALSA exists,
+which is a software framework and also part of the Linux kernel providing an
+API for sound card device drivers, configuring ALSA can be tricky. It has
+limitations for playing audio from multiple sources concurrently and lacks
+native Bluetooth support. ALSA also sort of supports mixing via dmix, but, it
+has fixed 22ms latency and the first process to playback owns the mixing.
 
 # Bluetooth Profiles
 
@@ -57,20 +57,22 @@ The most commonly used profiles are
 	* Headset Profile (HSP)
 
 A2DP profile is where we have one device streaming audio to the other device.
-This is what concerns most of us as we listen to music using headphones. AVRCP
-allows a single remote control device to control all of the audio video
-equipment in the immediate vicinity which a user might have access to. It is
-more commonly used in car infotainment systems to control streaming of audio
-over Bluetooth.
+This is what concerns most of us as we listen to music using headphones.
+
+AVRCP allows a single remote control device to control all of the audio video
+equipment in the immediate vicinity which a user might have access to. A common
+use case is in car infotainment systems to control streaming of audio over
+Bluetooth. Volume or playback controls like play, pause on our bluetooth
+headsets also use AVRCP.
 
 HSP is another commonly used profile. It allows the use of Bluetooth headsets
 along with mobile phones. Provides abilities like to ring, answer a call, hang
 up or adjust the volume.
 
 HFP concerns itself with allowing hands free kits to communicate with mobile
-phones like in car. In comparison to HSP, it adds extra features for use with a
-mobile phone like voice dialing, call waiting or redialing the last number. It
-also adds the mSBC codec which allows for better audio over HSP.
+phones. In comparison to HSP, it adds extra features for use with a mobile
+phone like voice dialing, call waiting or redialing the last number. It also
+adds the mSBC codec which allows for better audio over HSP.
 
 For this talk, henceforth, our focus will primarily be on the A2DP profile.
 
@@ -126,10 +128,11 @@ Qualcomm distributes the reference library for the codec.
 AAC theoretically should produce an output which is very close to the original.
 However, it has been observed that Apple seems to have the best encoder
 implementation available with it's macOS and iOS. Second best is the Fraunhofer
-FDK. AAC is a processing heavy codec and on Android phones with Energy Aware
-Scheduling, where energy efficiency will be prioritized over performance, AAC
-encoding will be done with a lower bitrate and quality. This results in a poor
-performance on Android phones.
+FDK which is open source library developed by Fraunhofer IIS and included as
+part of Android. However, based on tests done by folks at soundguys, the AAC
+quality observed on Android phones is not on par with Apple devices. Perhaps
+due to some other factors on Android. However, this is definitely not the fault
+of the codec.
 
 LDAC is a new codec promoted by Sony often advertised as a codec meant for
 audiophiles. It supports Adaptive Bit Rate viz. changing the bit rate depending
@@ -146,7 +149,9 @@ the audio to a point where one starts observing lip sync problems while
 watching video. Codecs like aptX which are less math and memory intensive have
 less latency. More math and memory intensive codecs like AAC can have greater
 latency but can be more efficient in conserving data and produce better sound
-quality for a given rate.
+quality for a given rate. Encoding latency is also quite dependent on buffer
+sizes along with CPU. For example, if a frame is 1024 samples, that is 23 ms at
+44.1 KHz.
 
 # Current State of PulseAudio
 
@@ -172,8 +177,8 @@ When it comes to codecs, always there are various license considerations to
 think of.
 
 Now, what if we want to support multiple encoder or decoder implementations.
-For example, in the case of AAC we have competing implementations between
-FFMPEG and Fraunhofer FDK.
+We might want to allow system integrators to be able to have alternate
+implementations that might make more sense on their specific platforms.
 
 Just like quite a few open source projects, PulseAudio is currently maintained
 by three volunteer developers on their own free time (probably amounting to
@@ -198,6 +203,10 @@ transport=/org/bluez/hci0/dev_4C_BC_98_80_01_9B/sep10/fd0
 gst-launch is a tool which builds and runs GStreamer pipelines. The pipeline
 description is a list of elements separated by exclamation marks. Properties
 are appended to the elements in form of **property=value**.
+
+Note that this is just an example for using GStreamer to stream LDAC on a
+system where one is not using something like pulseaudio and does not need
+something to manage streams and device access.
 
 # Progress so far
 
