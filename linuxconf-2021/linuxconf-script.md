@@ -40,11 +40,6 @@ has fixed 22ms latency and the first process to playback owns the mixing.
 
 # Bluetooth Profiles
 
-The bluetooth wireless technology standard has become pretty ubiquitous these
-days. The latest Bluetooth specification is 5.2. For audio, between 4.2 and 5.0
-things didn't change a lot. However, Bluetooth 5.2 introduces the successor to
-SBC called Low Complexity Communications Codec viz. LC3.
-
 When talking about Bluetooth stack, one of the first thing that concerns us are
 the various Bluetooth profiles. So what exactly are profiles? Profiles specify
 behaviours that any bluetooth enabled device must adhere to or comply with, to
@@ -92,22 +87,17 @@ There are other codecs available. Qualcomm has it's Audio Processing Technology
 aptX codec. Sony has LDAC. There is also Advanced Audio Coding (AAC), which has
 been standardised by ISO and IEC as part of MPEG-2 and MPEG-4 specifications.
 
-Licensing as a user or consumer is unclear. libldac which is the reference
-encoder implementation and included in Android has Apache license. aptX patents
-have expired it would seem. For AAC it is not required for a user to stream or
-distribute content.
-
-All devices support SBC but LDAC is generally available with Sony and some
-other DACs while aptX is generally only available with devices which use
-Qualcomm chipsets. Apple devices primarily do AAC.
+All devices support SBC but LDAC is generally available with Sony, while aptX
+is generally only available with devices which use Qualcomm chipsets. Apple
+devices primarily do AAC.
 
 # So which is better?
 
-So we basically live in this XKCD comic world where we actually have 14 codecs.
-aptX has some more variants. There seem to be some other codecs from Samsung
-and Huawei though I haven't seen any of those myself. There is FastStream which
-is some SBC variant and can be used for better audio quality with HSP. However,
-it is difficult to find headsets supporting faststream.
+So we basically live in this XKCD comic world where we actually have quite a
+few codecs. aptX has some more variants. There seem to be some other codecs
+from Samsung and Huawei though I haven't seen any of those myself. There is
+FastStream which is some SBC variant and can be used for better audio quality
+with HSP. However, it is difficult to find headsets supporting faststream.
 
 (Talk about some points from https://habr.com/en/post/456182/)
 
@@ -170,19 +160,22 @@ specifically created to address this.
 
 One of the first things users are gonna expect along with the support for
 additional codecs is the ability to switch between them. Till as recently as
-last December,  this was not possible. The support required to implement
+last December, this was not possible. The support required to implement
 switching between different codecs only got merged in December.
 
 When it comes to codecs, always there are various license considerations to
-think of.
+think of. Licensing as a user or consumer is unclear. libldac which is the
+reference encoder implementation and included in Android has Apache license.
+aptX patents have expired it would seem. For AAC it is not required for a user
+to stream or distribute content.
 
 Now, what if we want to support multiple encoder or decoder implementations.
 We might want to allow system integrators to be able to have alternate
 implementations that might make more sense on their specific platforms.
 
 Just like quite a few open source projects, PulseAudio is currently maintained
-by three volunteer developers on their own free time (probably amounting to
-less than one full time developer), which is not really enough, given the
+by three volunteer developers on their own free time probably amounting to
+less than one full time developer, which is not really enough, given the
 project size and scope.
 
 # GStreamer
