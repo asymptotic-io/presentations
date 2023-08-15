@@ -1,0 +1,42 @@
+directory: plots/
+
+# Whether or not to include a link to the source script in the caption.
+# Particularly useful for HTML output.
+source: false
+
+# When `strict: false`, pandoc-plot will leave code blocks untouched if a plot
+# could not be generated. This could happen if, for example, a toolkit is not
+# installed. If you want pandoc-plot to fail instead, use `strict: true`.
+strict: false
+
+# Text label for links to source code.
+# You can change this label if you are writing a document in a non-English language.
+# This only matters if `source` is set to `true`.
+source_label: Source code
+
+# Default density of figures in dots per inches (DPI).
+# This can be changed in the document specifically as well.
+dpi: 120
+
+# Default format in which to save the figures. This can be specified
+# individually as well.
+format: SVG
+
+# Text format for the captions. Unfortunately, there is no way to detect
+# this automatically. You can use the same notation as Pandoc's --from
+# parameter, specified here:
+#     https://pandoc.org/MANUAL.html#option--from
+# Example: markdown, rst+raw_tex
+caption_format: markdown+tex_math_dollars
+
+# Logging configuration
+logging:
+  # Possible verbosity values: debug, error, warning, info, silent
+  verbosity: warning
+  # If the filepath below is not present, then pandoc-plot will log to stderr
+  # Otherwise, log messages will be appended to the filepath.
+  # filepath: path/to/file.txt
+
+d2:
+  executable: d2
+  command_line_arguments: -s -c
