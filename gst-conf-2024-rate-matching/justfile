@@ -1,0 +1,11 @@
+infile := "time-for-rate-matching.md"
+outname := "time-for-rate-matching"
+
+build-reveal:
+  pandoc --katex --verbose -t revealjs -s {{infile}} -o {{outname}}.html
+
+print-reveal: build-reveal
+  docker run --rm -it -v $PWD:/data:Z astefanutti/decktape -s 1920x1080 /data/{{outname}}.html /data/{{outname}}-print.pdf
+
+build-beamer:
+  pandoc --pdf-engine=xelatex --verbose -t beamer -s {{infile}} -o {{outname}}.pdf
